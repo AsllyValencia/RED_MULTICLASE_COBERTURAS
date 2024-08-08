@@ -1,1 +1,3 @@
 Entorno virtual creado en Visual Studio Conde 
+se debe descomprimir la carpeta Lib detnro de esta carpeta parapoder acceder al entorno virtual 
+Para evitar problemas añadir una carpeta con el nombre "Include" que permanece vacia
