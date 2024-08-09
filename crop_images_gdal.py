@@ -1,8 +1,3 @@
-# -*- coding: utf-8 -*-
-"""
-@author: SSALAZAR
-"""
-
 from osgeo import gdal
 import numpy as np
 import os,glob
