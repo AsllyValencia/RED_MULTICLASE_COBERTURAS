@@ -1,7 +1,3 @@
-# -*- coding: utf-8 -*-
-"""
-@author: SSALAZAR
-"""
 
 import segmentation_models_pytorch as smp
 
