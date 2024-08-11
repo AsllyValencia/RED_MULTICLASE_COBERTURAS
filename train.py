@@ -1,4 +1,3 @@
-
 import segmentation_models_pytorch as smp
 
 import os, cv2
@@ -24,8 +23,8 @@ import albumentations as album
 
 # Definición de la función de pérdida combinada
 class DiceCrossEntropyLoss(nn.Module):
-    def __init__(self, weight_dice=0.5, weight_ce=0.5):
-        super(DiceCrossEntropyLoss, self).__init__()
+    def _init_(self, weight_dice=0.5, weight_ce=0.5):
+        super(DiceCrossEntropyLoss, self)._init_()
         self.weight_dice = weight_dice
         self.weight_ce = weight_ce
 
@@ -46,15 +45,15 @@ label_values = [
 
 def one_hot_encode(label, label_values):
     """
-    Convert a segmentation image label array to one-hot format
-    by replacing each pixel value with a vector of length num_classes
-    # Arguments
-        label: The 2D array segmentation image label
-        label_values: List of RGB values for each class
-        
-    # Returns
-        A 2D array with the same width and height as the input, but
-        with a depth size of num_classes
+    Convierte una matriz de etiquetas de imagen de segmentación en formato one-hot
+    reemplazando cada valor de píxel con un vector de longitud num_classes
+    # Argumentos
+    label: La etiqueta de imagen de segmentación de matriz 2D
+    label_values: Lista de valores RGB para cada clase
+
+    # Devuelve
+    Una matriz 2D con el mismo ancho y alto que la entrada, pero
+    con un tamaño de profundidad de num_classes
     """
     semantic_map = []
     for colour in label_values:
@@ -68,16 +67,15 @@ def one_hot_encode(label, label_values):
 # Perform reverse one-hot-encoding on labels / preds
 def reverse_one_hot(image):
     """
-    Transform a 2D array in one-hot format (depth is num_classes),
-    to a 2D array with only 1 channel, where each pixel value is
-    the classified class key.
-    # Arguments
-        image: The one-hot format image 
-        
-    # Returns
-        A 2D array with the same width and hieght as the input, but
-        with a depth size of 1, where each pixel value is the classified 
-        class key.
+    Transforma una matriz 2D en formato one-hot (la profundidad es num_classes),
+    en una matriz 2D con solo 1 canal, donde cada valor de píxel es
+    la clave de clase clasificada.
+    # Argumentos
+    imagen: La imagen en formato one-hot
+
+    # Devuelve
+    Una matriz 2D con el mismo ancho y alto que la entrada, pero
+    con un tamaño de profundidad de 1, donde cada valor de píxel es la clave de clase clasificada.
     """
     x = np.argmax(image, axis = -1)
     return x
@@ -85,13 +83,13 @@ def reverse_one_hot(image):
 # Perform colour coding on the reverse-one-hot outputs
 def colour_code_segmentation(image, label_values):
     """
-    Given a 1-channel array of class keys, colour code the segmentation results.
-    # Arguments
-        image: single channel array where each value represents the class key.
-        label_values: List of RGB values for each class
+    Dado un arreglo de 1 canal de claves de clase, codifique por colores los resultados de la segmentación.
+    # Argumentos
+    imagen: arreglo de un solo canal donde cada valor representa la clave de clase.
+    label_values: lista de valores RGB para cada clase
 
-    # Returns
-        Colour coded image for segmentation visualization
+    # Devuelve
+    Imagen codificada por colores para la visualización de la segmentación
     """
     colour_codes = np.array(label_values)  # Convert label values to a numpy array
     x = colour_codes[image.astype(int)]   # Map each class index to its corresponding RGB color
@@ -100,14 +98,14 @@ def colour_code_segmentation(image, label_values):
 
 class RoadsDataset(torch.utils.data.Dataset):
 
-    """Roads Dataset. Read images, apply augmentation and preprocessing transformations.
-        images_dir (str): path to images folder
-        masks_dir (str): path to segmentation masks folder
-        class_rgb_values (list): RGB values of select classes to extract from segmentation mask
-        augmentation (albumentations.Compose): data transfromation pipeline (flip, scale, etc.)
-        preprocessing (albumentations.Compose): data preprocessing (normalization, shape manipulation, etc."""
+    """Conjunto de datos de carreteras. Leer imágenes, aplicar transformaciones de aumento y preprocesamiento.
+    images_dir (str): ruta a la carpeta de imágenes
+    masks_dir (str): ruta a la carpeta de máscaras de segmentación
+    class_rgb_values ​​(list): valores RGB de las clases seleccionadas para extraer de la máscara de segmentación
+    augmentation (albumentations.Compose): canalización de transformación de datos (voltear, escalar, etc.)
+    preprocessing (albumentations.Compose): preprocesamiento de datos (normalización, manipulación de formas, etc.)"""
 
-    def __init__(
+    def _init_(
             self, 
             images_dir, 
             masks_dir, 
@@ -123,7 +121,7 @@ class RoadsDataset(torch.utils.data.Dataset):
         self.augmentation = augmentation
         self.preprocessing = preprocessing
     
-    def __getitem__(self, i):
+    def _getitem_(self, i):
         
         # read images and masks
         image = cv2.cvtColor(cv2.imread(self.image_paths[i]), cv2.COLOR_BGR2RGB)
@@ -144,7 +142,7 @@ class RoadsDataset(torch.utils.data.Dataset):
             
         return image, mask
         
-    def __len__(self):
+    def _len_(self):
         # return length of 
         return len(self.image_paths)
 
@@ -153,12 +151,13 @@ def to_tensor(x, **kwargs):
 
 
 def get_preprocessing(preprocessing_fn=None):
-    """Construct preprocessing transform    
-    Args:
-        preprocessing_fn (callable): data normalization function 
-            (can be specific for each pretrained neural network)
-    Return:
-        transform: albumentations.Compose
+    """
+    Construir transformación de preprocesamiento
+    Argumentos:
+    preprocessing_fn (invocable): función de normalización de datos
+    (puede ser específica para cada red neuronal entrenada previamente)
+    Retorno:
+    transform: albumentations.Compose
     """   
     _transform = []
     if preprocessing_fn:
@@ -249,7 +248,7 @@ def train(TRAIN_VALID="./data/", SIZE=100, CLASS_PREDICT = ['Vegetacion', 'Cuerp
     valid_loader = DataLoader(valid_dataset, batch_size=BATCH_VALID, shuffle=False, 
                             num_workers=0) #En windows puede presentarse errores con valores diferentes a 0
 
-    # Set device: `CUDA` or `CPU`
+    # Set device: CUDA or CPU
     DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     
     # Definir la función de pérdida combinada
@@ -295,5 +294,5 @@ def train(TRAIN_VALID="./data/", SIZE=100, CLASS_PREDICT = ['Vegetacion', 'Cuerp
         # Save model if a better val IoU score is obtained
         if best_iou_score < valid_logs['iou_score']:
             best_iou_score = valid_logs['iou_score']
-            torch.save(model, './weight_{}_{}_{}_{}_ep{}_batch_{}_{}_lr_{}.pth'.format(ds,ENCODER, ENCODER_WEIGHTS, ACTIVATION, EPOCHS, BATCH_TRAIN,BATCH_VALID,str(LEARNING_R).split(".")[1]))
+            torch.save(model, './weight_{}{}{}{}_ep{}_batch{}{}_lr{}.pth'.format(ds,ENCODER, ENCODER_WEIGHTS, ACTIVATION, EPOCHS, BATCH_TRAIN,BATCH_VALID,str(LEARNING_R).split(".")[1]))
             print('Model saved!')
