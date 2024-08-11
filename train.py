@@ -169,7 +169,7 @@ def get_preprocessing(preprocessing_fn=None):
 #random_idx = random.randint(0, len(augmented_dataset)-1)
 
 # Función principal de entrenamiento
-def train(TRAIN_VALID="./data/", SIZE=100, CLASS_PREDICT = ['Vegetacion', 'CuerposAgua', 'Construcciones', 'Vias', 'Otros'], CLASS_RGB=[[0, 255, 0], [0, 0, 255], [255, 0, 0], [255, 255, 0], [128, 128, 128]],  # RGB para las 5 clases]
+def train(TRAIN_VALID="./dataset/", SIZE=512, CLASS_PREDICT = ['Vegetacion', 'CuerposAgua', 'Construcciones', 'Vias', 'Otros'], CLASS_RGB=[[0, 255, 0], [0, 0, 255], [255, 0, 0], [255, 255, 0], [128, 128, 128]],  # RGB para las 5 clases]
           ENCODER = 'resnet50', ENCODER_WEIGHTS = 'imagenet', ACTIVATION = 'sigmoid', EPOCHS = 5, LEARNING_R=0.0001,BATCH_TRAIN=16,BATCH_VALID=1, ds='dataset'):
     
     height_crop=width_crop=(SIZE//32)*32
