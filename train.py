@@ -169,7 +169,7 @@ def get_preprocessing(preprocessing_fn=None):
 #random_idx = random.randint(0, len(augmented_dataset)-1)
 
 # Función principal de entrenamiento
-def train(TRAIN_VALID="./dataset/", SIZE=512, CLASS_PREDICT = ['Vegetacion', 'CuerposAgua', 'Construcciones', 'Vias', 'Otros'], CLASS_RGB=[[0, 255, 0], [0, 0, 255], [255, 0, 0], [255, 255, 0], [128, 128, 128]],  # RGB para las 5 clases]
+def train(TRAIN_VALID="/kaggle/input/dataset-coberturas/dataset/", SIZE=512, CLASS_PREDICT = ['Vegetacion', 'CuerposAgua', 'Construcciones', 'Vias', 'Otros'], CLASS_RGB=[[0, 255, 0], [0, 0, 255], [255, 0, 0], [255, 255, 0], [128, 128, 128]],  # RGB para las 5 clases]
           ENCODER = 'resnet50', ENCODER_WEIGHTS = 'imagenet', ACTIVATION = 'sigmoid', EPOCHS = 5, LEARNING_R=0.0001,BATCH_TRAIN=16,BATCH_VALID=1, ds='dataset'):
     
     height_crop=width_crop=(SIZE//32)*32
@@ -200,11 +200,11 @@ def train(TRAIN_VALID="./dataset/", SIZE=512, CLASS_PREDICT = ['Vegetacion', 'Cu
     #DATA SOURCE
     DATA_DIR = TRAIN_VALID
 
-    x_train_dir = os.path.join(DATA_DIR, "train/images")
-    y_train_dir = os.path.join(DATA_DIR, "train/masks")
+    x_train_dir = os.path.join(DATA_DIR, "/kaggle/input/dataset-coberturas/dataset/train/images/")
+    y_train_dir = os.path.join(DATA_DIR, "/kaggle/input/dataset-coberturas/dataset/train/masks")
 
-    x_valid_dir = os.path.join(DATA_DIR, "valid/images")
-    y_valid_dir = os.path.join(DATA_DIR, "valid/masks")
+    x_valid_dir = os.path.join(DATA_DIR, "/kaggle/input/dataset-coberturas/dataset/valid/images/")
+    y_valid_dir = os.path.join(DATA_DIR, "/kaggle/input/dataset-coberturas/dataset/valid/masks")
 
     class_names = CLASS_PREDICT
     class_rgb_values =CLASS_RGB
