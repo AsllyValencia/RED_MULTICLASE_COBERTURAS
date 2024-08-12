@@ -284,6 +284,9 @@ def train(TRAIN_VALID="/kaggle/input/dataset-coberturas/dataset/", SIZE=512, CLA
     # TRAINING
     best_iou_score = 0.0
     train_logs_list, valid_logs_list = [], []
+    # crear directorio para los modelos si no existe
+    os.makedirs('./models', exist_ok=True)
+              
     for i in range(0, EPOCHS):
         # Perform training & validation
         print('\nEpoch: {}'.format(i))
@@ -294,5 +297,11 @@ def train(TRAIN_VALID="/kaggle/input/dataset-coberturas/dataset/", SIZE=512, CLA
         # Save model if a better val IoU score is obtained
         if best_iou_score < valid_logs['iou_score']:
             best_iou_score = valid_logs['iou_score']
-            torch.save(model, './weight_{}{}{}{}_ep{}_batch{}{}_lr{}.pth'.format(ds,ENCODER, ENCODER_WEIGHTS, ACTIVATION, EPOCHS, BATCH_TRAIN,BATCH_VALID,str(LEARNING_R).split(".")[1]))
-            print('Model saved!')
+        # Modificar la línea de guardado del modelo
+        model_filename = 'weight_{}{}{}{}_ep{}_batch{}{}_lr{}.pth'.format(
+            ds, ENCODER, ENCODER_WEIGHTS, ACTIVATION, EPOCHS, BATCH_TRAIN, BATCH_VALID, 
+            str(LEARNING_R).split(".")[1])
+        model_path = os.path.join('./models', model_filename)
+        
+        torch.save(model, model_path)
+        print(f'Model saved at: {model_path}')
